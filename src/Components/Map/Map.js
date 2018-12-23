@@ -1,20 +1,47 @@
 import React, { Component } from "react";
-
-const MY_API = "AIzaSyCc3zoz5TZaG3w2oF7IeR-fhxNXi8uywNk";
+import Geocode from "react-geocode";
 
 export default class Map extends Component {
   constructor(props) {
     super(props);
-    this.getMap = this.getMap.bind(this);
+
+    this.state = {
+      MY_API: "AIzaSyCc3zoz5TZaG3w2oF7IeR-fhxNXi8uywNk",
+      address: props.address,
+      center: {}
+    };
   }
 
-  getMap = () => {
-    let address = this.props.address;
-    let _url = `https://www.google.com/maps/embed/v1/place?key=${MY_API}&q=${address}`;
-    let map = [];
+  shouldComponentUpdate(nextprops) {
+    if (nextprops.address) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-    if (address) {
-      map = (
+  async componentWillReceiveProps(nextprops) {
+    const center = await this.getCenter(nextprops.address);
+    this.setState({
+      center: center,
+      address: nextprops.address
+    });
+  }
+
+  getCenter = address => {
+    Geocode.setApiKey(this.state.MY_API);
+
+    return Geocode.fromAddress(address).then(
+      response => response.results[0].geometry.location
+    );
+  };
+
+  getMap = () => {
+    if (this.state.center) {
+      const _url = `https://www.google.com/maps/embed/v1/place?key=${
+        this.state.MY_API
+      }&q=${this.state.center.lat},${this.state.center.lng}`;
+      return (
         <iframe
           id="map"
           frameBorder="0"
@@ -25,9 +52,8 @@ export default class Map extends Component {
         />
       );
     } else {
-      map = <h1> Please select a company </h1>;
+      return <h1> Place does not found :/ </h1>;
     }
-    return map;
   };
 
   render() {

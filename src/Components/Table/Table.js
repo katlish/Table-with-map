@@ -96,6 +96,14 @@ export default class Table extends Component {
     this.setState(state => ({
       address: this.getAddress(state.companies[0])
     }));
+
+    this.setState(state => ({
+      city: state.cities[0]
+    }));
+
+    this.setState(state => ({
+      CompanyName: state.companies[0]
+    }));
   };
 
   updateCompanies = city => {
@@ -106,6 +114,10 @@ export default class Table extends Component {
 
     this.setState(state => ({
       address: this.getAddress(state.companies[0])
+    }));
+
+    this.setState(state => ({
+      CompanyName: state.companies[0]
     }));
   };
 
@@ -184,7 +196,12 @@ export default class Table extends Component {
           updateState={comp => this.updateAddress(comp)}
           itemToSelect={this.state.CompanyName}
         />
-        <Column title="Map" updateState={addr => {}} width={"Map"}>
+        <Column
+          title="Map"
+          updateState={addr => {}}
+          width={"Map"}
+          itemToSelect={true}
+        >
           <Map address={this.state.address} />
         </Column>
       </div>

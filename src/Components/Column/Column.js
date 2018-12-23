@@ -7,8 +7,20 @@ export default class Column extends Component {
     super(props);
 
     this.state = {
-      activeItem: null
+      activeItem: props.itemToSelect
     };
+  }
+
+  shouldComponentUpdate(nextprops) {
+    if (nextprops.itemToSelect) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  componentWillReceiveProps(nextprops) {
+    this.onItemActive(nextprops.itemToSelect);
   }
 
   onItemActive = item => {
